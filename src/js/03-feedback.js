@@ -1,11 +1,41 @@
+import throttle from 'lodash.throttle';
+import '../css/03-feedback.css';
+import '../css/03-feedback.css';
+
 const form = document.querySelector('.feedback-form');
 const KeyFeedbackFormState = "feedback-form-state";
-let value = {};
-console.log(value)
-form.addEventListener("input", onClickInput);
+let formValue = {};
+form.addEventListener("input", throttle(onFormInput, 500));
+form.addEventListener('submit', onFormSubmit);
+toForm()
 
-function onClickInput(evt){
-    localStorage.setItem(KeyFeedbackFormState, JSON.stringify(value))
-    
+function onFormInput(evt){
    
+    formValue[evt.target.name] = evt.target.value;
+    localStorage.setItem(KeyFeedbackFormState, JSON.stringify(formValue))
 }
+
+function onFormSubmit (evt){
+    evt.preventDefault();
+   console.log({
+    email: form.elements.email.value,
+    message: form.elements.message.value,
+   })
+    localStorage.removeItem(KeyFeedbackFormState);
+    evt.currentTarget.reset()
+    formValue = {};
+}
+
+function toForm (){
+    const formParsed = JSON.parse(localStorage.getItem(KeyFeedbackFormState));
+    formValue = formParsed
+    if(formParsed){
+    if(formParsed.email){
+        form.elements.email.value = formParsed.email;
+    }
+    if(formParsed.message){
+        form.elements.message.value = formParsed.message;
+    }
+   }
+}
+
