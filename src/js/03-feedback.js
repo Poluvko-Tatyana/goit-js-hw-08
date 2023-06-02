@@ -10,25 +10,20 @@ form.addEventListener('submit', onFormSubmit);
 toForm()
 
 function onFormInput(evt){
-   
     formValue[evt.target.name] = evt.target.value;
     localStorage.setItem(KeyFeedbackFormState, JSON.stringify(formValue))
 }
 
 function onFormSubmit (evt){
     evt.preventDefault();
-   console.log({
-    email: form.elements.email.value,
-    message: form.elements.message.value,
-   })
     localStorage.removeItem(KeyFeedbackFormState);
     evt.currentTarget.reset()
     formValue = {};
 }
 
 function toForm (){
-    const formParsed = JSON.parse(localStorage.getItem(KeyFeedbackFormState));
-    formValue = formParsed
+    let formParsed = JSON.parse(localStorage.getItem(KeyFeedbackFormState)) || {};
+    formValue = formParsed;
     if(formParsed){
     if(formParsed.email){
         form.elements.email.value = formParsed.email;
